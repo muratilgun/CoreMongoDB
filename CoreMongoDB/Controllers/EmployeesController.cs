@@ -28,7 +28,7 @@ namespace CoreMongoDB.Controllers
             return Json(employees);
         }
 
-        public JsonResult Save(Employee employee)
+        public JsonResult SaveEmp(Employee employee)
         {
             var employees = _employeeRepository.Save(employee);
             return Json(employees);
