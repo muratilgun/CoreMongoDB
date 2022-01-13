@@ -1,7 +1,66 @@
 ﻿@{
     ViewData["Title"] = "Employee Page";
 }
+<script src="~/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    var _employees = [];
+    $(document).ready(function () {
+        LoadEmployees();
+    });
+    function LoadEmployees() {
+        Reset();
+        $.get("../Employees/GetEmployees", function (emps) {
+            _employees = emps;
+            $.map(emps, function (emp) {
+                var tempStr = "<tr>";
+                tempStr += "<td>" + emp.id + "</td>";
+                tempStr += "<td>" + emp.name + "</td>";
+                tempStr += "<td>" + emp.cardNumber + "</td>";
+                tempStr += "<td>" + emp.salary + "</td>";
+                tempStr += "<td><button class='btn btn-primary' onclick='Edit(\"" + emp.id + "\")'>Edit</button><button class='btn btn-danger' onclick='Delete(\"" + emp.id + "\")'>Delete</button> ";
+                tempStr += "</tr>";
+                $("#tblEmployee > tbody").append(tempStr);
+            });
+        });
+    }
+    function Reset() {
+        _employees = [];
+        $("tblEmployee tbody tr").remove();
+        $(".inputField").val("");
+    }
+    function Save() {
+        var employee = {
+            Id: $.trim($("#txtEmpId").val()),
+            Name: $.trim($("#txtName").val()),
+            CardNumber: $.trim($("#txtCardNumber").val()),
+            Salary: $.trim($("#txtSalary").val())
+        };
+        $.post("../Employees/SaveEmp", employee, function (emp) {
+            LoadEmployees();
+            location.reload();
 
+        });
+    }
+
+    function Edit(empId) {
+        var emp = _employees.find(x => x.id == empId);
+        $("#txtEmpId").val(emp.id);
+        $("#txtName").val(emp.name);
+        $("#txtCardNumber").val(emp.cardNumber);
+        $("#txtSalary").val(emp.salary);
+    }
+
+    function Delete(empId) {
+        $.ajax({
+            url: "../Employees/DeleteEmp?empId=" + empId,
+            method: 'DELETE'
+        }).done(function (data) {
+            alert(data);
+            LoadEmployees();
+            location.reload();
+        });
+    }
+</script>
 <div class="row">
     <div class="col-md-4">
         <div class="row" style="display: none;">
@@ -59,61 +118,3 @@
         </table>
     </div>
 </div>
-<script src="~/jquery/jquery.min.js"></script>
-<script type="text/javascript">
-    var _employees = [];
-    $(document).ready(function() {
-        LoadEmployees();
-    });
-    function LoadEmployees() {
-        Reset();
-        $.get("../Employees/GetEmployees",function(emps) {
-            _employees = emps;
-            $.map(emps,
-                function(emp) {
-                    var tempStr = "<tr>";
-                    tempStr += "<td>" + emp.id + "</td>";
-                    tempStr += "<td>" + emp.name + "</td>";
-                    tempStr += "<td>" + emp.cardNumber + "</td>";
-                    tempStr += "<td>" + emp.salary + "</td>";
-                    tempStr += "<td><button class='btn btn-primary' onclick='Edit(\"" + emp.id + "\")'>Edit</button><button class='btn btn-danger' onclick='Edit(\"" + emp.id + "\")'></button> ";
-                    tempStr += "</tr>";
-                    $("#tblEmployee tbody").append(tempStr);
-                });
-        });
-    }
-    function Reset() {
-        _employees = [];
-        $("tblEmployee tbody tr").remove();
-        $(".inputField").val("");
-    }
-    function Save() {
-        var employee = {
-            Id: $.trim($("#txtEmpId").val()),
-            Name: $.trim($("#txtName").val()),
-            CardNumber: $.trim($("#txtCardNumber").val()),
-            Salary: $.trim($("#txtSalary").val())
-        };
-        $.post("../Employees/SaveEmp", employee, function(emp) {
-            LoadEmployees();
-        });
-    }
-
-    function Edit(empId) {
-        var emp = _employees.find(x => x.id == empId);
-        $("#txtEmpId").val(emp.id);
-        $("#txtName").val(emp.name);
-        $("#txtCardNumber").val(emp.CardNumber);
-        $("#txtSalary").val(emp.salary);
-    }
-
-    function Delete(empId) {
-        $.ajax({
-            url: "../Employees/DeleteEmp?empId=" + empId,
-            method: 'DELETE'
-        }).done(function(data) {
-            alert(data);
-            LoadEmployees();
-        });
-    }
-</script>

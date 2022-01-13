@@ -33,9 +33,9 @@ namespace CoreMongoDB.Controllers
             var employees = _employeeRepository.Save(employee);
             return Json(employees);
         }
-        public JsonResult DeleteEmployee(string employeeId)
+        public JsonResult DeleteEmp(string empId)
         {
-            string message = _employeeRepository.Delete(employeeId);
+            string message = _employeeRepository.Delete(empId);
             return Json(message);
         }
 
