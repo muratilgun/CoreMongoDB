@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ImageSaveAndReadCoreMongoDB.IRepository;
+using ImageSaveAndReadCoreMongoDB.Repository;
 
 namespace ImageSaveAndReadCoreMongoDB
 {
@@ -24,6 +26,8 @@ namespace ImageSaveAndReadCoreMongoDB
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
