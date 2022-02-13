@@ -1,21 +1,18 @@
-﻿using ImageSaveAndReadCoreMongoDB.Models;
+﻿using System;
+using System.IO;
+using ImageSaveAndReadCoreMongoDB.IRepository;
+using ImageSaveAndReadCoreMongoDB.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace ImageSaveAndReadCoreMongoDB.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IEmployeeRepository _employeeRepository = null;
+        public HomeController(IEmployeeRepository employeeRepository)
         {
-            _logger = logger;
+            _employeeRepository = employeeRepository;
         }
 
         public IActionResult Index()
@@ -23,15 +20,45 @@ namespace ImageSaveAndReadCoreMongoDB.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public string SaveFile(FileUpload fileobj)
         {
-            return View();
+            Employee emp = JsonConvert.DeserializeObject<Employee>(fileobj.Employee);
+            if (fileobj.File.Length> 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    fileobj.File.CopyTo(ms);
+                    var fileBytes = ms.ToArray();
+                    emp.Photo = fileBytes;
+                    emp = _employeeRepository.Save(emp);
+                    if (emp.Id.Trim() != "")
+                    {
+                        return "Saved";
+                    }
+                }
+            }
+
+            return "Failed";
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public JsonResult GetSavedEmployee()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var emp = _employeeRepository.GetSaveEmployee();
+            emp.Photo = this.GetImage(Convert.ToBase64String(emp.Photo));
+            return Json(emp);
+        }
+
+        private byte[] GetImage(string sBase64String)
+        {
+            byte[] bytes = null;
+            if (!string.IsNullOrEmpty(sBase64String))
+            {
+                bytes = Convert.FromBase64String(sBase64String);
+            }
+
+            return bytes;
         }
     }
 }
