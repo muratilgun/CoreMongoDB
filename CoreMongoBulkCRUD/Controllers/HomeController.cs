@@ -25,15 +25,29 @@ namespace CoreMongoBulkCRUD.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        [HttpPost]
+        public JsonResult BulkSave()
         {
-            return View();
+            _employeeRepository.BulkSave();
+            return null;
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPut]
+        public JsonResult BulkUpdate()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            _employeeRepository.BulkUpdate();
+            return null;
+        }
+        [HttpDelete]
+        public JsonResult BulkDelete()
+        {
+            _employeeRepository.BulkDelete();
+            return null;
+        }
+        [HttpDelete]
+        public JsonResult BulkDeleteByPropertyValue()
+        {
+            _employeeRepository.BulkDeleteByPropertyValue();
+            return null;
         }
     }
 }

@@ -2,7 +2,44 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<button id="btnSave" class="btn btn-success">Bulk Insert</button>
+<br />
+<br />
+<button id="btnDeleteProp" class="btn btn-warning">Bulk Delete By Property Value</button>
+<br />
+<br />
+<button id="btnUpdate" class="btn btn-primary">Bulk Update</button>
+<br />
+<br />
+<button id="btnDelete" class="btn btn-warning">Bulk Delete</button>
+
+<script src="~/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+    });
+    $("btnSave").click(function() {
+        $.ajax({
+            type: "Post",
+            url: "/Home/BulkSave",
+            success: function(data) {
+
+            },
+            error: function(data) {
+                console.log('Error:', data);
+            }
+        });
+    });
+    $("btnDeleteByProp").click(function() {
+        $.ajax({
+            type: "Delete",
+            url: "/Home/BulkDeleteByPropertyValue",
+            success: function(data) {
+
+            },
+            error: function(data) {
+                console.log('Error:', data);
+            }
+        });
+    });
+</script>
