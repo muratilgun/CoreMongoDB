@@ -16,9 +16,9 @@ namespace CoreMongoBulkCRUD.Repository
 
         public EmployeeRepository()
         {
-            _mongoClient = new MongoClient("mongodb://127.0.0.1:27017/");
+            _mongoClient = new MongoClient("mongodb://127.0.0.1:27017");
             _database = _mongoClient.GetDatabase("OfficeDB");
-            _empTable = _database.GetCollection<Employee>("Employee");
+            _empTable = _database.GetCollection<Employee>("Employees");
         }
 
         public EmployeeRepository(MongoClient mongoClient)

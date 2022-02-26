@@ -13,7 +13,7 @@ namespace CoreMongoBulkCRUD.Controllers
     public class HomeController : Controller
     {
   
-        public IEmployeeRepository _employeeRepository = null;
+        IEmployeeRepository _employeeRepository = null;
 
         public HomeController(IEmployeeRepository employeeRepository)
         {
